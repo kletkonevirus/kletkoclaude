@@ -1,0 +1,434 @@
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --panel2:#f4f6fb; --line:#dfe4ee;
+  --fg:#1a2130; --mut:#69738a; --accent:#3a63d0; --accent2:#2a4bad;
+  --ok:#1e9e57; --warn:#b9791f; --crit:#d23c40; --pill:#f0f3fa; --shadow:rgba(30,40,70,.12);
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0e1117; --panel:#171c24; --panel2:#1c222c; --line:#28303c;
+  --fg:#e7ebf2; --mut:#8a94a6; --accent:#6f9bff; --accent2:#3a63d0;
+  --ok:#2ec26a; --warn:#e8b23a; --crit:#e5484d; --pill:#0e1218; --shadow:rgba(0,0,0,.5);
+}}
+:root[data-theme="light"]{
+  --bg:#eef1f6; --panel:#ffffff; --panel2:#f4f6fb; --line:#dfe4ee;
+  --fg:#1a2130; --mut:#69738a; --accent:#3a63d0; --accent2:#2a4bad;
+  --ok:#1e9e57; --warn:#b9791f; --crit:#d23c40; --pill:#f0f3fa; --shadow:rgba(30,40,70,.12);
+}
+:root[data-theme="dark"]{
+  --bg:#0e1117; --panel:#171c24; --panel2:#1c222c; --line:#28303c;
+  --fg:#e7ebf2; --mut:#8a94a6; --accent:#6f9bff; --accent2:#3a63d0;
+  --ok:#2ec26a; --warn:#e8b23a; --crit:#e5484d; --pill:#0e1218; --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+#app{display:flex;min-height:100vh;background:var(--bg);color:var(--fg);
+  font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-variant-numeric:tabular-nums}
+.mut{color:var(--mut)} .good{color:var(--ok)} .bad{color:var(--crit)}
+h1,h2,h3{text-wrap:balance}
+
+.sidebar{width:224px;flex:none;background:var(--panel);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;padding:16px 12px;position:sticky;top:0;height:100vh}
+.brand{font-size:19px;font-weight:750;display:flex;gap:9px;align-items:center;padding:6px 8px 4px;letter-spacing:-.01em}
+.brand small{font-weight:500;color:var(--mut);font-size:11px}
+.demoflag{margin:12px 8px 14px;font-size:11px;color:var(--warn);border:1px solid var(--line);
+  background:var(--pill);border-radius:8px;padding:7px 9px;line-height:1.3}
+#nav{display:flex;flex-direction:column;gap:2px}
+#nav a{padding:9px 12px;border-radius:9px;color:var(--mut);cursor:pointer;font-weight:550;user-select:none}
+#nav a:hover{background:var(--panel2);color:var(--fg)}
+#nav a.active{background:var(--accent);color:#fff}
+.side-foot{margin-top:auto;font-size:11px;display:flex;flex-direction:column;gap:3px;padding:8px}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:16px;padding:16px 26px;border-bottom:1px solid var(--line);
+  position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);z-index:5}
+.topbar h1{font-size:19px;margin:0;letter-spacing:-.01em}
+.topbar-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.content{padding:22px 26px;max-width:1360px}
+
+.grid{display:grid;gap:16px}.g2{grid-template-columns:1fr 1fr}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px var(--shadow)}
+.card h2{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:0 0 12px;font-weight:650}
+.card h3{margin:0 0 4px;font-size:15px}.full{grid-column:1/-1}
+.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(6,1fr);margin-bottom:16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px var(--shadow)}
+.kpi .v{font-size:23px;font-weight:730;letter-spacing:-.02em}
+.kpi .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+
+.cap{display:flex;align-items:center;gap:10px;margin:9px 0}
+.cap .name{width:92px}.cap .bar{flex:1;height:9px;background:var(--pill);border-radius:6px;overflow:hidden}
+.cap .fill{height:100%;border-radius:6px;transition:width .4s}.cap .val{width:46px;text-align:right;color:var(--mut)}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mut);font-weight:550}
+tbody tr:hover td{background:var(--panel2)}
+
+.pill{font-size:11px;padding:2px 9px;border-radius:20px;border:1px solid var(--line);display:inline-block}
+.pill.active{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.pill.paused{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.02em}
+.badge.meta{background:color-mix(in srgb,#3a63d0 20%,transparent);color:#3a63d0}
+.badge.google{background:color-mix(in srgb,#c98a10 22%,transparent);color:#b9791f}
+.badge.tiktok{background:color-mix(in srgb,#d6338a 20%,transparent);color:#c42d7d}
+
+button,.btn{font:inherit;border:0;border-radius:9px;padding:7px 14px;cursor:pointer;font-weight:600}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-ghost{background:var(--panel2);color:var(--fg);border:1px solid var(--line)}
+.btn-ok{background:var(--ok);color:#fff}.btn-danger{background:color-mix(in srgb,var(--crit) 16%,transparent);color:var(--crit);border:1px solid color-mix(in srgb,var(--crit) 40%,var(--line))}
+.btn-sm{padding:4px 10px;font-size:12px}.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px}
+input,select{width:100%;background:var(--pill);border:1px solid var(--line);color:var(--fg);border-radius:9px;padding:8px 10px;font:inherit}
+input:focus,select:focus{outline:0;border-color:var(--accent)}
+.form-row{display:flex;gap:12px}.form-row>div{flex:1}
+input[type=file]{padding:7px;font-size:13px}
+input[type=file]::file-selector-button{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:7px;padding:5px 10px;margin-right:10px;cursor:pointer;font:inherit}
+
+.switch{position:relative;display:inline-block;width:42px;height:23px}
+.switch input{display:none}
+.slider{position:absolute;inset:0;background:var(--line);border-radius:20px;transition:.15s;cursor:pointer}
+.slider:before{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.switch input:checked+.slider{background:var(--ok)}
+.switch input:checked+.slider:before{transform:translateX(19px)}
+
+.al{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.al .dot{width:8px;height:8px;border-radius:50%;flex:none;margin-top:6px}
+.dot.info{background:var(--accent)}.dot.warn{background:var(--warn)}.dot.crit{background:var(--crit)}
+.al .src{color:var(--mut);font-size:11px}
+.apr{border:1px solid color-mix(in srgb,var(--warn) 40%,var(--line));background:color-mix(in srgb,var(--warn) 8%,transparent);border-radius:11px;padding:11px 13px;margin-bottom:10px}
+.apr .r{margin-bottom:9px}.empty{color:var(--mut);font-style:italic;padding:14px 0;text-align:center}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:50}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;width:min(430px,92vw);box-shadow:0 20px 60px var(--shadow)}
+.modal h3{margin:0 0 6px}.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--panel);
+  border:1px solid var(--line);border-radius:10px;padding:11px 18px;opacity:0;transition:.2s;z-index:60;font-weight:600;box-shadow:0 8px 30px var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.cr-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.cr-card{background:var(--panel2);border:1px solid var(--line);border-radius:11px;overflow:visible}
+.thumb{position:relative;overflow:visible}
+.thumb-img{width:100%;height:120px;object-fit:cover;border-radius:11px 11px 0 0;display:block}
+.thumb.placeholder{height:120px;display:flex;align-items:center;justify-content:center;font-size:38px;background:var(--pill);border-radius:11px 11px 0 0}
+.thumb .zoom{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+  width:300px;max-width:80vw;max-height:300px;object-fit:contain;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;box-shadow:0 12px 40px var(--shadow);z-index:40;padding:6px;pointer-events:none}
+.thumb:hover .zoom{display:block}.cr-meta{padding:9px 11px}
+
+@media (max-width:860px){.kpis{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr}.sidebar{width:66px}.brand span,.demoflag,.side-foot,#nav a span{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div id="app">
+  <aside class="sidebar">
+    <div class="brand">🛰️ <span>AdPilot <small>demo</small></span></div>
+    <div class="demoflag">Демо-режим: данные площадок симулируются в браузере. Реальные кабинеты не подключены.</div>
+    <nav id="nav">
+      <a data-view="overview" class="active">📊 <span>Обзор</span></a>
+      <a data-view="analytics">📈 <span>Аналитика</span></a>
+      <a data-view="integrations">🔌 <span>Интеграции</span></a>
+      <a data-view="campaigns">🎯 <span>Кампании</span></a>
+      <a data-view="rules">⚙️ <span>Правила</span></a>
+      <a data-view="creatives">🖼 <span>Креативы</span></a>
+    </nav>
+    <div class="side-foot">
+      <div class="mut">пейсинг: курьеры (UTR)</div>
+      <div class="mut" id="tick">—</div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><h1 id="view-title">Обзор</h1><div class="topbar-right" id="topbar-right"></div></header>
+    <section id="content" class="content"></section>
+  </main>
+</div>
+<div id="modal-root"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const KZT=n=>n==null?"—":new Intl.NumberFormat("ru-RU").format(Math.round(n))+" ₸";
+const pct=n=>n==null?"—":Math.round(n*100)+"%";
+const capColor=v=>v>=0.9?"var(--ok)":v>=0.5?"var(--warn)":"var(--crit)";
+const badge=p=>`<span class="badge ${p}">${p}</span>`;
+const rnd=()=>Math.random();
+const gauss=(m,s)=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+
+/* ---- реальные данные загрузки курьеров (data/couriers_by_day.csv) ---- */
+const COURIER=[["2026-06-16",113.3],["2026-06-17",199.7],["2026-06-18",134.3],["2026-06-19",259.3],["2026-06-20",148.2],
+["2026-06-21",150.5],["2026-06-22",52],["2026-06-23",238.3],["2026-06-24",159],["2026-06-25",147.2],["2026-06-26",72.1],
+["2026-06-27",212],["2026-06-29",18.2],["2026-06-30",10.3],["2026-07-01",26.4],["2026-07-02",107.8],["2026-07-03",93.6],
+["2026-07-05",57.5],["2026-07-06",119],["2026-07-07",46.9],["2026-07-08",48],["2026-07-09",42],["2026-07-10",84.5],
+["2026-07-11",5],["2026-07-12",82],["2026-07-13",91.3],["2026-07-14",8.7],["2026-07-15",21.4],["2026-07-16",60.7],
+["2026-07-17",21.5],["2026-07-18",7],["2026-07-19",53],["2026-07-20",28.4],["2026-07-21",3.3],["2026-07-22",30.1]];
+
+/* ---- состояние ---- */
+let TICK=0, ID=1; const nid=p=>p+"_"+(ID++);
+const CPM={meta:2600,google:3200,tiktok:2100};
+const CITIES=["Almaty","Astana","Shymkent"];
+const state={accounts:[],campaigns:[],rules:[],alerts:[],approvals:[],creatives:[],capacity:{}};
+
+const cpa=c=>c.m.orders?c.m.spend/c.m.orders:null;
+const roas=c=>c.m.spend?c.m.rev/c.m.spend:0;
+const effBudget=c=>Math.round(c.budget*c.pace);
+
+function seedRules(){state.rules=[
+  {name:"operational_pacing",title:"Операционный пейсинг",desc:"Режет бюджет при перегрузе доставки; пауза при критическом перегрузе.",auto:true,enabled:true,params:{pause_below:0.35}},
+  {name:"pacing_recovery",title:"Восстановление после пейсинга",desc:"Возвращает плановый бюджет и снимает операционную паузу при разгрузке.",auto:true,enabled:true,params:{resume_above:0.5}},
+  {name:"cpa_guardrail",title:"Стоп-лосс по CPA",desc:"Ставит на паузу кампанию с CPA выше порога × таргет.",auto:true,enabled:true,params:{cpa_multiplier:1.8,min_orders:3}},
+  {name:"scale_winner",title:"Разгон победителей",desc:"Предлагает поднять бюджет кампаниям с ROAS выше порога × таргет.",auto:false,enabled:true,params:{roas_multiplier:1.25,budget_step_pct:20}},
+];}
+const ruleCfg=n=>state.rules.find(r=>r.name===n);
+
+function makeCampaigns(acc){
+  const baseCpa={meta:900,google:750,tiktok:1100}[acc.platform];
+  const effPool=[0.62,0.85,1.05,1.35,1.95];
+  CITIES.forEach(city=>{
+    const tcpa=baseCpa*(0.9+0.2*rnd()), troas=2.2+0.8*rnd();
+    const c={id:nid("cmp"),account_id:acc.id,platform:acc.platform,city,
+      name:`${acc.platform[0].toUpperCase()+acc.platform.slice(1)} · ${city} · Prospecting`,
+      budget:[40000,60000,80000][Math.floor(rnd()*3)],target_cpa:tcpa,target_roas:troas,
+      status:"active",pace:1,pause_reason:"",eff:effPool[Math.floor(rnd()*effPool.length)],
+      aov:tcpa*troas,m:{spend:0,impr:0,clicks:0,orders:0,rev:0},hist:[],last_action:"",cooldowns:{}};
+    for(let i=0;i<8;i++)accumulate(c,windowMetrics(c));
+    state.campaigns.push(c);
+  });
+}
+function connect(platform,name,ext){
+  const acc={id:nid("acc"),platform,name:name||platform,external_id:ext||"act_mock",status:"connected",note:"мок"};
+  state.accounts.push(acc); makeCampaigns(acc); return acc;
+}
+function disconnect(id){
+  const acc=state.accounts.find(a=>a.id===id); if(!acc)return;
+  acc.status="disconnected";
+  const ids=state.campaigns.filter(c=>c.account_id===id).map(c=>c.id);
+  state.campaigns=state.campaigns.filter(c=>c.account_id!==id);
+  state.creatives=state.creatives.filter(cr=>!ids.includes(cr.campaign_id));
+  state.approvals=state.approvals.filter(a=>!ids.includes(a.campaignId));
+}
+
+function windowMetrics(c){
+  if(c.status==="paused")return{spend:0,impr:0,clicks:0,orders:0,rev:0};
+  const wb=effBudget(c)/96;
+  let spend=Math.max(0,wb*(0.75+0.4*rnd()));
+  const tcpa=c.target_cpa*c.eff*(0.9+0.2*rnd());
+  let orders=tcpa?spend/tcpa:0, rev=orders*c.aov*(0.9+0.2*rnd());
+  let impr=Math.round(spend/CPM[c.platform]*1000), clicks=orders?Math.round(orders/0.07):Math.round(impr*0.012);
+  if(rnd()<0.05){
+    if(rnd()<0.5){spend*=3;orders=spend/tcpa;rev=orders*c.aov;impr=Math.round(spend/CPM[c.platform]*1000);clicks=Math.round(orders/0.07);
+      pushAlert("crit",`anomaly:${c.name}`,`Всплеск расхода в ${c.city} — проверить ставки/аукцион`);}
+    else{orders*=0.1;rev=orders*c.aov;pushAlert("crit",`anomaly:${c.name}`,`Обвал конверсии (${c.city}) — проверить лендинг/оплату`);}
+  }
+  return{spend:Math.round(spend),impr,clicks,orders:Math.round(orders),rev:Math.round(rev)};
+}
+function accumulate(c,d){c.m.spend+=d.spend;c.m.impr+=d.impr;c.m.clicks+=d.clicks;c.m.orders+=d.orders;c.m.rev+=d.rev;}
+
+function capacityFor(city){
+  const bias={Almaty:1.55,Astana:0.95,Shymkent:0.8}[city]||1, base=104, target=base*1.15;
+  const load=Math.max(0,gauss(base*bias,base*0.13));
+  return Math.max(0,Math.min(1,+(1-Math.max(0,load-target)/target).toFixed(2)));
+}
+function pushAlert(level,src,msg){state.alerts.unshift({level,src,msg});if(state.alerts.length>40)state.alerts.pop();}
+
+/* ---- правила (детерминированный движок, асимметрия) ---- */
+function applyAction(c,a){
+  if(a.type==="pause"){c.status="paused";c.pause_reason=a.rule==="operational_pacing"?"operational":(a.rule==="cpa_guardrail"?"guardrail":"manual");c.last_action="⏸ пауза · "+a.rule;}
+  else if(a.type==="resume"){c.status="active";c.pause_reason="";c.last_action="▶ возобновлено · "+a.rule;}
+  else if(a.type==="throttle"){c.pace=a.mult;c.last_action=`🔻 бюджет ${Math.round(a.mult*100)}% · `+a.rule;}
+  else if(a.type==="increase"){c.budget=Math.round(c.budget*(1+a.delta/100));c.last_action=`🔺 бюджет +${a.delta}% · `+a.rule;}
+}
+function evalCampaign(c){
+  const cap=state.capacity[c.city]??1, out=[];
+  const op=ruleCfg("operational_pacing"), rec=ruleCfg("pacing_recovery"),
+        gd=ruleCfg("cpa_guardrail"), sc=ruleCfg("scale_winner");
+  if(op.enabled&&c.status==="active"){
+    if(cap<op.params.pause_below)out.push({type:"pause",rule:"operational_pacing",reason:`Критический перегруз доставки в ${c.city} (capacity=${pct(cap)}) — стоп трафика`});
+    else if(cap<1&&Math.abs(c.pace-cap)>0.05)out.push({type:"throttle",mult:cap,rule:"operational_pacing",reason:`Перегруз доставки в ${c.city} (capacity=${pct(cap)}) — режем бюджет до ${pct(cap)}`});
+  }
+  if(rec.enabled){
+    if(c.status==="paused"&&c.pause_reason==="operational"&&cap>=rec.params.resume_above)out.push({type:"resume",rule:"pacing_recovery",reason:`Доставка в ${c.city} разгрузилась — снимаю операционную паузу`,auto:true});
+    else if(c.status==="active"&&cap>=0.98&&c.pace<0.99)out.push({type:"throttle",mult:1,rule:"pacing_recovery",reason:`Доставка в ${c.city} разгрузилась — возвращаю плановый бюджет`});
+  }
+  if(gd.enabled&&c.status==="active"&&c.m.orders>=gd.params.min_orders){
+    const cv=cpa(c); if(cv&&cv>c.target_cpa*gd.params.cpa_multiplier)out.push({type:"pause",rule:"cpa_guardrail",reason:`CPA ${Math.round(cv)} > ${gd.params.cpa_multiplier}× таргета (${Math.round(c.target_cpa)}) — стоп-лосс`});
+  }
+  if(sc.enabled&&c.status==="active"&&cap>=0.9&&c.m.spend>0&&roas(c)>=c.target_roas*sc.params.roas_multiplier&&c.pace>=0.99){
+    out.push({type:"increase",delta:sc.params.budget_step_pct,rule:"scale_winner",cooldown:30,reason:`ROAS ${roas(c).toFixed(1)} ≥ ${sc.params.roas_multiplier}× таргета (${c.target_roas.toFixed(1)}) и доставка свободна — предлагаю +${sc.params.budget_step_pct}% бюджета`});
+  }
+  return out;
+}
+function dispatch(c,a){
+  if((c.cooldowns[a.rule]||-1)>TICK)return;
+  const cfg=ruleCfg(a.rule); const auto=a.auto||(cfg&&cfg.auto);
+  const risky=(a.type==="increase"||a.type==="resume");
+  if(risky&&!auto){
+    if(state.approvals.some(x=>x.campaignId===c.id&&x.rule===a.rule))return;
+    state.approvals.push({id:nid("apr"),campaignId:c.id,campaign:c.name,rule:a.rule,reason:a.reason,action:a});
+    pushAlert("info",a.rule,`⏸ Требует подтверждения: ${a.reason} [${c.name}]`);
+    if(a.cooldown)c.cooldowns[a.rule]=TICK+a.cooldown; return;
+  }
+  applyAction(c,a); if(a.rule!=="operational_pacing"&&a.rule!=="pacing_recovery")pushAlert("info",a.rule,`${a.type} · ${a.reason}`);
+  if(a.cooldown)c.cooldowns[a.rule]=TICK+a.cooldown;
+}
+function tick(){
+  TICK++;
+  if(TICK%96===0)state.campaigns.forEach(c=>c.m={spend:0,impr:0,clicks:0,orders:0,rev:0});
+  CITIES.forEach(ci=>state.capacity[ci]=capacityFor(ci));
+  state.campaigns.forEach(c=>{const d=windowMetrics(c);c.hist.push(d);if(c.hist.length>30)c.hist.shift();accumulate(c,d);evalCampaign(c).forEach(a=>dispatch(c,a));});
+  if(V==="overview"||V==="campaigns")render();
+  $("#tick").textContent="тик #"+TICK;
+}
+
+/* ---- креативы-заглушки (SVG data-URI) ---- */
+function svgCreative(t,s,c1,c2){
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/></linearGradient></defs><rect width='400' height='300' fill='url(#g)'/><text x='28' y='150' font-family='Segoe UI,Arial' font-size='46' font-weight='800' fill='white'>${t}</text><text x='28' y='196' font-family='Segoe UI,Arial' font-size='22' fill='white' opacity='0.9'>${s}</text><text x='28' y='268' font-family='Segoe UI,Arial' font-size='16' fill='white' opacity='0.75'>Choco Food</text></svg>`;
+  return "data:image/svg+xml,"+encodeURIComponent(svg);
+}
+
+/* ---- аналитика ---- */
+const shortDate=d=>(d||"").slice(5);
+const fmtK=n=>Math.abs(n)>=1000?Math.round(n/1000)+"k":""+Math.round(n);
+function svgChart(labels,series,fmt=fmtK,height=230){
+  const W=720,H=height,pad={l:50,r:14,t:12,b:28},pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+  const all=series.flatMap(s=>s.data),max=Math.max(1,...all)*1.12,n=labels.length||1;
+  const X=i=>pad.l+pw*(n===1?0.5:i/(n-1)),Y=v=>pad.t+ph*(1-v/max);
+  let g="";for(let k=0;k<=4;k++){const val=max*k/4,y=Y(val);
+    g+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="var(--line)"/>`;
+    g+=`<text x="${pad.l-8}" y="${y+3}" text-anchor="end" font-size="10" fill="var(--mut)">${fmt(val)}</text>`;}
+  const step=Math.max(1,Math.ceil(n/7));let xl="";
+  labels.forEach((d,i)=>{if(i%step===0)xl+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="var(--mut)">${shortDate(d)}</text>`;});
+  let paths="";series.forEach((s,si)=>{
+    const pts=s.data.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+    const area=`${pad.l},${Y(0)} `+pts+` ${X(n-1)},${Y(0)}`;
+    if(series.length===1)paths+=`<polygon points="${area}" fill="${s.color}" opacity="0.10"/>`;
+    paths+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    s.data.forEach((v,i)=>{const last=i===s.data.length-1;paths+=`<circle cx="${X(i)}" cy="${Y(v)}" r="${last?4:2.3}" fill="${s.color}"><title>${labels[i]}: ${fmt(v)}</title></circle>`;});
+  });
+  const legend=series.map(s=>`<span style="display:inline-flex;align-items:center;gap:6px;margin-right:14px"><span style="width:12px;height:3px;background:${s.color};display:inline-block;border-radius:2px"></span><span class="mut" style="font-size:12px">${s.name}</span></span>`).join("");
+  return `<div style="margin-bottom:6px">${legend}</div><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}${xl}${paths}</svg>`;
+}
+function campaignSeries(){
+  const base=state.campaigns.reduce((s,c)=>s+c.budget,0)||180000, out=[];
+  const seed=(d,s)=>{let h=2166136261;for(const ch of d+":"+s){h=(h^ch.charCodeAt(0))*16777619>>>0;}return(h%10000)/10000;};
+  COURIER.forEach(([d],i)=>{
+    const wd=i%7,season=wd===4||wd===5?1.15:(wd===0?0.85:1),trend=0.8+0.4*(i/(COURIER.length-1)),noise=0.85+0.3*seed(d,1);
+    const sp=base*0.45*season*trend*noise, cp=780*(0.9+0.3*seed(d,2))/(0.9+0.2*(trend-0.8)),
+          or=sp/cp, aov=4300*(0.95+0.1*seed(d,3)), ro=(or*aov)/sp;
+    out.push({date:d,spend:Math.round(sp),orders:Math.round(or),cpa:Math.round(cp),roas:+ro.toFixed(2)});
+  });
+  return out;
+}
+function weekAgg(cs){
+  const R=[];for(let i=0;i<cs.length;i+=7){const e=Math.min(i+7,cs.length);let s=0,o=0,rev=0,cS=0,cN=0;
+    for(let j=i;j<e;j++){s+=cs[j].spend;o+=cs[j].orders;rev+=cs[j].roas*cs[j].spend;cS+=COURIER[j][1];cN++;}
+    R.push({date:cs[i].date,spend:Math.round(s),orders:o,cpa:o?Math.round(s/o):0,roas:s?+(rev/s).toFixed(2):0,cour:+(cS/cN).toFixed(1)});}
+  return R;
+}
+
+/* ---- UI ---- */
+const TITLES={overview:"Обзор",analytics:"Аналитика",integrations:"Интеграции",campaigns:"Кампании",rules:"Правила",creatives:"Креативы"};
+const RENDER={};let V="overview",timer=null;
+function setView(v){V=v;document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("active",a.dataset.view===v));
+  $("#view-title").textContent=TITLES[v];$("#topbar-right").innerHTML="";render();}
+function render(){(RENDER[V]||(()=>{}))();}
+let toastT=null;function toast(m,ok=true){const t=$("#toast");t.textContent=m;t.className="toast show";clearTimeout(toastT);toastT=setTimeout(()=>t.className="toast",2000);}
+function modal(h){$("#modal-root").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">${h}</div></div>`;}
+function closeModal(){$("#modal-root").innerHTML="";}
+
+RENDER.overview=()=>{
+  const camps=state.campaigns,active=camps.filter(c=>c.status==="active");
+  const spend=camps.reduce((s,c)=>s+c.m.spend,0),orders=camps.reduce((s,c)=>s+c.m.orders,0),rev=camps.reduce((s,c)=>s+c.m.rev,0);
+  const kpis=[["Кабинеты",state.accounts.filter(a=>a.status==="connected").length],["Кампаний",`${active.length}/${camps.length}`],
+    ["Расход",KZT(spend)],["Заказы",orders],["CPA",orders?KZT(spend/orders):"—"],["ROAS",spend?(rev/spend).toFixed(2):"0"]]
+    .map(([l,v])=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+  const caps=Object.entries(state.capacity).map(([c,v])=>`<div class="cap"><span class="name">${c}</span><span class="bar"><span class="fill" style="width:${Math.round(v*100)}%;background:${capColor(v)}"></span></span><span class="val">${pct(v)}</span></div>`).join("")||`<div class="empty">нет подключённых кабинетов</div>`;
+  const apr=state.approvals.length?state.approvals.map(a=>`<div class="apr"><div class="r">${a.reason}</div><div class="mut" style="font-size:12px">${a.campaign} · <b>${a.rule}</b></div><div class="row-actions" style="margin-top:9px"><button class="btn btn-ok btn-sm" onclick="approve('${a.id}')">Подтвердить</button><button class="btn btn-danger btn-sm" onclick="decline('${a.id}')">Отклонить</button></div></div>`).join(""):`<div class="empty">Очередь пуста — автопилот справляется сам</div>`;
+  const alerts=state.alerts.length?state.alerts.slice(0,30).map(a=>`<div class="al"><span class="dot ${a.level}"></span><span>${a.msg} <span class="src">· ${a.src}</span></span></div>`).join(""):`<div class="empty">тихо</div>`;
+  $("#content").innerHTML=`<div class="kpis">${kpis}</div><div class="grid g2">
+    <div class="card"><h2>Операционная загрузка (доставка)</h2>${caps}<div class="mut" style="font-size:12px;margin-top:8px">&lt;100% → пейсинг режет бюджет · &lt;35% → пауза. Кухня подключится, когда оцифруют.</div></div>
+    <div class="card"><h2>⏳ Ждут подтверждения (разгон бюджета)</h2>${apr}</div>
+    <div class="card full"><h2>🔔 Сигналы и действия</h2>${alerts}</div></div>`;
+};
+window.approve=id=>{const a=state.approvals.find(x=>x.id===id);if(a){const c=state.campaigns.find(x=>x.id===a.campaignId);if(c){applyAction(c,a.action);c.cooldowns[a.rule]=TICK+30;}state.approvals=state.approvals.filter(x=>x.id!==id);toast("Подтверждено");render();}};
+window.decline=id=>{state.approvals=state.approvals.filter(x=>x.id!==id);toast("Отклонено");render();};
+
+let gran="day";
+RENDER.analytics=()=>{
+  const cs=campaignSeries();
+  let labels,spend,orders,cpaA,roasA,cour;
+  if(gran==="week"){const w=weekAgg(cs);labels=w.map(x=>x.date);spend=w.map(x=>x.spend);orders=w.map(x=>x.orders);cpaA=w.map(x=>x.cpa);roasA=w.map(x=>x.roas);cour=w.map(x=>x.cour);}
+  else{labels=cs.map(x=>x.date);spend=cs.map(x=>x.spend);orders=cs.map(x=>x.orders);cpaA=cs.map(x=>x.cpa);roasA=cs.map(x=>x.roas);cour=COURIER.map(x=>x[1]);}
+  $("#topbar-right").innerHTML=`<button class="btn ${gran==='day'?'btn-primary':'btn-ghost'} btn-sm" onclick="setGran('day')">Дни</button><button class="btn ${gran==='week'?'btn-primary':'btn-ghost'} btn-sm" onclick="setGran('week')">Недели</button>`;
+  $("#content").innerHTML=`<div class="grid g2">
+    <div class="card"><h2>Расход, ₸</h2>${svgChart(labels,[{name:"Расход",color:"var(--accent)",data:spend}])}</div>
+    <div class="card"><h2>Заказы</h2>${svgChart(labels,[{name:"Заказы",color:"#2ec26a",data:orders}],n=>""+Math.round(n))}</div>
+    <div class="card"><h2>CPA, ₸</h2>${svgChart(labels,[{name:"CPA",color:"#e8b23a",data:cpaA}])}</div>
+    <div class="card"><h2>ROAS</h2>${svgChart(labels,[{name:"ROAS",color:"#c07bff",data:roasA}],n=>n.toFixed(1))}</div>
+    <div class="card full"><h2>Загрузка курьеров (заказов на курьера в день) · реальные данные</h2>${svgChart(labels,[{name:"Заказов/курьер",color:"#ff7ab6",data:cour}],n=>""+Math.round(n))}<div class="mut" style="font-size:12px;margin-top:6px">Источник: data/couriers_by_day.csv. Этот сигнал гейтит расход в операционном пейсинге.</div></div></div>`;
+};
+window.setGran=g=>{gran=g;render();};
+
+RENDER.integrations=()=>{
+  $("#topbar-right").innerHTML=`<button class="btn btn-primary" onclick="connectModal()">+ Подключить кабинет</button>`;
+  const cards=state.accounts.length?state.accounts.map(a=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>${a.name}</h3>${badge(a.platform)}</div><div class="mut" style="margin:6px 0">ID кабинета: ${a.external_id}</div><div><span class="pill ${a.status==='connected'?'active':'paused'}">${a.status}</span> <span class="mut" style="font-size:12px">· ${a.note}</span></div>${a.status==='connected'?`<button class="btn btn-danger btn-sm" style="margin-top:12px" onclick="disc('${a.id}')">Отключить</button>`:""}</div>`).join(""):`<div class="empty">Нет подключённых кабинетов.</div>`;
+  $("#content").innerHTML=`<div class="cards">${cards}</div>`;
+};
+window.connectModal=()=>{modal(`<h3>Подключить рекламный кабинет</h3><div class="mut" style="font-size:12px">Демо: подключение мокируется. В проде здесь OAuth площадки.</div><label>Площадка</label><select id="m-pl"><option value="meta">meta</option><option value="google">google</option><option value="tiktok">tiktok</option></select><label>Название</label><input id="m-nm" placeholder="Choco · Meta"><label>ID кабинета</label><input id="m-ex" placeholder="act_123456789"><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Отмена</button><button class="btn btn-primary" onclick="doConnect()">Подключить</button></div>`);};
+window.doConnect=()=>{connect($("#m-pl").value,$("#m-nm").value,$("#m-ex").value);closeModal();toast("Кабинет подключён");render();};
+window.disc=id=>{if(confirm("Отключить кабинет? Его кампании исчезнут."))(disconnect(id),toast("Кабинет отключён"),render());};
+
+RENDER.campaigns=()=>{
+  const rows=[...state.campaigns].sort((a,b)=>a.city<b.city?-1:a.city>b.city?1:0).map(c=>{
+    const st=c.status==="active"?`<span class="pill active">active</span>`:`<span class="pill paused">paused</span>`;
+    const cv=cpa(c),cpaCls=cv==null?"mut":(cv>c.target_cpa?"bad":"good"),ro=roas(c),roCls=ro>=c.target_roas?"good":"bad";
+    const bud=c.pace<0.99?`${KZT(effBudget(c))} <span class="mut">(${pct(c.pace)})</span>`:KZT(c.budget);
+    const tg=c.status==="active"?`<button class="btn btn-ghost btn-sm" onclick="pauseC('${c.id}')">⏸ Пауза</button>`:`<button class="btn btn-ok btn-sm" onclick="resumeC('${c.id}')">▶ Старт</button>`;
+    return `<tr><td>${badge(c.platform)}</td><td>${c.city}</td><td>${c.name}<div class="mut" style="font-size:11px">${c.last_action||""}</div></td><td>${st}</td><td>${bud}</td><td>${KZT(c.m.spend)}</td><td>${c.m.orders}</td><td class="${cpaCls}">${cv==null?"—":KZT(cv)}<span class="mut" style="font-size:11px"> /${KZT(c.target_cpa)}</span></td><td class="${roCls}">${ro.toFixed(2)}<span class="mut" style="font-size:11px"> /${c.target_roas.toFixed(2)}</span></td><td><div class="row-actions">${tg}<button class="btn btn-ghost btn-sm" onclick="editBudget('${c.id}')">Бюджет</button><button class="btn btn-ghost btn-sm" onclick="editTargets('${c.id}')">Таргеты</button></div></td></tr>`;
+  }).join("");
+  $("#content").innerHTML=state.campaigns.length?`<div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Площадка</th><th>Город</th><th>Кампания</th><th>Статус</th><th>Бюджет</th><th>Расход</th><th>Заказы</th><th>CPA</th><th>ROAS</th><th>Управление</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty">Нет кампаний. Подключите кабинет в «Интеграции».</div>`;
+};
+window.pauseC=id=>{const c=state.campaigns.find(x=>x.id===id);applyAction(c,{type:"pause",rule:"manual"});c.pause_reason="manual";c.last_action="⏸ пауза · вручную";toast("Пауза");render();};
+window.resumeC=id=>{const c=state.campaigns.find(x=>x.id===id);c.status="active";c.pause_reason="";c.last_action="▶ запущено · вручную";toast("Запущено");render();};
+window.editBudget=id=>{const c=state.campaigns.find(x=>x.id===id);modal(`<h3>Дневной бюджет</h3><label>Сумма, ₸</label><input id="m-b" type="number" value="${c.budget}"><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Отмена</button><button class="btn btn-primary" onclick="saveBudget('${id}')">Сохранить</button></div>`);};
+window.saveBudget=id=>{const c=state.campaigns.find(x=>x.id===id);c.budget=Math.max(1,+$("#m-b").value);c.last_action="✏ бюджет вручную";closeModal();toast("Бюджет обновлён");render();};
+window.editTargets=id=>{const c=state.campaigns.find(x=>x.id===id);modal(`<h3>Целевые показатели</h3><div class="form-row"><div><label>Target CPA, ₸</label><input id="m-c" type="number" value="${Math.round(c.target_cpa)}"></div><div><label>Target ROAS</label><input id="m-r" type="number" step="0.1" value="${c.target_roas.toFixed(1)}"></div></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Отмена</button><button class="btn btn-primary" onclick="saveTargets('${id}')">Сохранить</button></div>`);};
+window.saveTargets=id=>{const c=state.campaigns.find(x=>x.id===id);c.target_cpa=+$("#m-c").value;c.target_roas=+$("#m-r").value;c.aov=c.target_cpa*c.target_roas;c.last_action="✏ таргеты вручную";closeModal();toast("Таргеты обновлены");render();};
+
+RENDER.rules=()=>{
+  const cards=state.rules.map(r=>{
+    const params=Object.entries(r.params).map(([k,v])=>`<div><label>${k}</label><input class="p-in" data-rule="${r.name}" data-key="${k}" type="number" step="0.05" value="${v}"></div>`).join("");
+    return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div><h3>${r.title}</h3><div class="mut" style="font-size:12px">${r.desc}</div></div><label class="switch"><input type="checkbox" ${r.enabled?"checked":""} onchange="toggleRule('${r.name}',this.checked)"><span class="slider"></span></label></div><div class="form-row" style="margin-top:12px;flex-wrap:wrap">${params}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><label style="display:flex;gap:8px;align-items:center;margin:0"><span>Авто-исполнение</span><label class="switch"><input type="checkbox" id="au-${r.name}" ${r.auto?"checked":""}><span class="slider"></span></label></label><button class="btn btn-ghost btn-sm" onclick="saveRule('${r.name}')">Сохранить</button></div></div>`;
+  }).join("");
+  $("#content").innerHTML=`<div class="cards">${cards}</div><div class="mut" style="font-size:12px;margin-top:14px">⚠️ Асимметрия по умолчанию: снижение/пауза — авто; разгон бюджета — через подтверждение.</div>`;
+};
+window.toggleRule=(n,e)=>{ruleCfg(n).enabled=e;toast(e?"Правило включено":"Правило выключено");};
+window.saveRule=n=>{const r=ruleCfg(n);document.querySelectorAll(`.p-in[data-rule="${n}"]`).forEach(i=>r.params[i.dataset.key]=+i.value);r.auto=$("#au-"+n).checked;toast("Пороги сохранены");render();};
+
+const fmtIcon={image:"🖼",video:"🎬",carousel:"🎠"};
+RENDER.creatives=()=>{
+  const opts=state.campaigns.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  const tiles=state.creatives.length?state.creatives.map(cr=>{
+    const camp=state.campaigns.find(c=>c.id===cr.campaign_id);
+    const thumb=cr.img?`<div class="thumb"><img class="thumb-img" src="${cr.img}" alt="${cr.name}"><img class="zoom" src="${cr.img}" alt=""></div>`:`<div class="thumb placeholder">${fmtIcon[cr.fmt]||"🖼"}</div>`;
+    return `<div class="cr-card">${thumb}<div class="cr-meta"><b>${cr.name}</b><div class="mut" style="font-size:12px">${cr.fmt} · ${camp?camp.name:"—"}</div><div class="mut" style="font-size:11px">${cr.asset_id}</div></div></div>`;
+  }).join(""):`<div class="empty">Креативов пока нет — загрузите первый слева.</div>`;
+  $("#content").innerHTML=`<div class="grid g2"><div class="card"><h2>Загрузить креатив</h2><div class="mut" style="font-size:12px">Выберите файл изображения — появится превью. В проде файл уходит в API площадки.</div><label>Файл изображения</label><input type="file" id="cr-f" accept="image/*" onchange="previewFile()"><div id="cr-pv"></div><label>Кампания</label><select id="cr-c">${opts||"<option value=''>нет кампаний</option>"}</select><div class="form-row"><div><label>Название</label><input id="cr-n" placeholder="hook_v3_burger"></div><div><label>Формат</label><select id="cr-fmt"><option>image</option><option>video</option><option>carousel</option></select></div></div><button class="btn btn-primary" style="margin-top:14px" onclick="uploadCr()">⬆ Загрузить креатив</button></div><div class="card"><h2>Галерея креативов <span class="mut" style="font-size:12px">· наведите на миниатюру для увеличения</span></h2><div class="cr-grid">${tiles}</div></div></div>`;
+};
+function fileURL(f){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(f);});}
+window.previewFile=async()=>{const f=$("#cr-f").files[0],box=$("#cr-pv");if(!f){box.innerHTML="";return;}if(!$("#cr-n").value)$("#cr-n").value=f.name.replace(/\.[^.]+$/,"");const u=await fileURL(f);box.innerHTML=`<div class="thumb" style="margin:10px 0"><img class="thumb-img" src="${u}"><img class="zoom" src="${u}"></div>`;};
+window.uploadCr=async()=>{const cid=$("#cr-c").value;if(!cid)return toast("Нет кампаний",false);const f=$("#cr-f").files[0];let img=null,name=$("#cr-n").value;if(f){if(f.size>4*1024*1024)return toast("Файл больше 4 МБ",false);name=name||f.name.replace(/\.[^.]+$/,"");img=await fileURL(f);}state.creatives.push({id:nid("cr"),campaign_id:cid,name:name||"creative",fmt:$("#cr-fmt").value,asset_id:"mock_asset_"+Math.floor(rnd()*9000+1000),img});toast("Креатив загружен");render();};
+
+/* ---- init ---- */
+seedRules();
+const acc=connect("meta","Choco · Meta (demo)","act_1029384756");
+CITIES.forEach((ci,i)=>{const c=state.campaigns[i];if(c)state.creatives.push({id:nid("cr"),campaign_id:c.id,name:["Скидка 30% на первый заказ","Бесплатная доставка","Комбо за 1990₸"][i],fmt:"image",asset_id:"mock_asset_"+(4200+i),img:svgCreative(["-30%","Free","Combo"][i],["на первый заказ","доставка 0₸","2 блюда + напиток"][i],["#3a63d0","#1e9e57","#d6338a"][i],["#6f9bff","#2ec26a","#ff7ab6"][i])});});
+for(let i=0;i<40;i++)tick();
+document.querySelectorAll("#nav a").forEach(a=>a.addEventListener("click",()=>setView(a.dataset.view)));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+setView("overview");
+timer=setInterval(tick,3000);
+</script>

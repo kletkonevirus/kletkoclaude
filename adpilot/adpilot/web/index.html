@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdPilot · контроллер рекламы</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">🛰️ <span>AdPilot</span></div>
+    <nav id="nav">
+      <a data-view="overview" class="active">📊 Обзор</a>
+      <a data-view="analytics">📈 Аналитика</a>
+      <a data-view="integrations">🔌 Интеграции</a>
+      <a data-view="campaigns">🎯 Кампании</a>
+      <a data-view="rules">⚙️ Правила</a>
+      <a data-view="creatives">🖼 Креативы</a>
+    </nav>
+    <div class="side-foot">
+      <div class="mut">данные площадок: <b>MOCK</b></div>
+      <div class="mut">пейсинг: курьеры (UTR)</div>
+      <div class="mut" id="tick">—</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h1 id="view-title">Обзор</h1>
+      <div class="topbar-right" id="topbar-right"></div>
+    </header>
+    <section id="content" class="content"></section>
+  </main>
+
+  <div id="modal-root"></div>
+  <div id="toast" class="toast"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
